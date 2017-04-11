@@ -1,0 +1,50 @@
+---
+
+azs:
+- name: z1
+  cloud_properties:
+    zone: us-central1-a
+
+vm_types:
+- name: large
+  cloud_properties:
+    machine_type: n1-standard-2
+    root_disk_type: pd-standard
+    root_disk_size_gb: 30
+
+
+disk_types:
+- name: default
+  disk_size: 5120
+  cloud_properties:
+    type: pd-standard
+
+
+networks:
+  - name: private
+    type: manual
+    subnets:
+    - range: 10.128.0.0/20	
+      gateway: 10.128.0.1	
+      reserved:
+        - 10.128.0.0-10.128.0.62
+      azs:
+        - z1
+      cloud_properties:
+        network_name: default	
+        subnetwork_name: default
+        ephemeral_external_ip: false
+        tags:
+          - internal
+          - denver2017
+
+compilation:
+  workers: 4
+  reuse_compilation_vms: true
+  az: z1
+  network: private
+  cloud_properties:
+    machine_type: n1-standard-4
+    root_disk_type: pd-standard
+    root_disk_size_gb: 50
+    preemptible: true

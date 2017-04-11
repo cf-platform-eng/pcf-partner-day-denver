@@ -1,0 +1,32 @@
+name: my-postgres
+director_uuid: ef764bf0-6878-4225-9429-955f4fa89d72
+
+releases:
+  - {name: my-postgres, version: latest}
+stemcells:
+  - alias: bosh-warden-boshlite-ubuntu-trusty-go_agent
+    os: ubuntu-trusty
+    version: latest
+
+instance_groups:
+  - name: postgresql_server_node
+    instances: 1
+    azs: [z1]
+    jobs:
+    - name: my_pg_server
+      release: my-postgres
+    vm_type: large
+    cloud_properties:
+      tags:
+      - allow-ssh
+    stemcell: bosh-warden-boshlite-ubuntu-trusty-go_agent
+    persistent_disk_type: default
+    networks:
+      - name: private
+
+update:
+  canaries: 1
+  max_in_flight: 10
+  canary_watch_time: 1000-30000
+  update_watch_time: 1000-30000
+
